@@ -1,7 +1,47 @@
 <?php
 session_start();
 
-$data_file = 'users.json'; 
+class User {
+    public $fullname;
+    public $email;
+    public $password;
+
+    public function __construct($fullname, $email, $password) {
+        $this->fullname = $fullname;
+        $this->email = $email;
+        $this->password = $password;
+    }
+}
+
+class UserManager {
+    private $data_file = 'users.json';
+    private $users = [];
+
+    public function __construct() {
+        if (file_exists($this->data_file)) {
+            $this->users = json_decode(file_get_contents($this->data_file), true);
+        }
+    }
+
+    public function emailExists($email) {
+        foreach ($this->users as $user) {
+            if ($user['email'] === $email) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function registerUser ($fullname, $email, $password) {
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $this->users[] = [
+            'fullname' => $fullname,
+            'email' => $email,
+            'password' => $hashed_password,
+        ];
+        file_put_contents($this->data_file, json_encode($this->users, JSON_PRETTY_PRINT));
+    }
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $fullname = $_POST['fullname'];
@@ -10,29 +50,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $confirm_password = $_POST['confirm_password'];
 
     if ($password === $confirm_password) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $userManager = new UserManager();
 
-        $users = [];
-        if (file_exists($data_file)) {
-            $users = json_decode(file_get_contents($data_file), true);
+        if ($userManager->emailExists($email)) {
+            $error = "Email sudah terdaftar!";
+            include 'register.php';
+            exit();
         }
 
-        foreach ($users as $user) {
-            if ($user['email'] === $email) {
-                $error = "Email sudah terdaftar!";
-                include 'register.php';
-                exit();
-            }
-        }
-
-        $users[] = [
-            'fullname' => $fullname,
-            'email' => $email,
-            'password' => $hashed_password,
-        ];
-
-        file_put_contents($data_file, json_encode($users, JSON_PRETTY_PRINT));
-
+        $userManager->registerUser ($fullname, $email, $password);
         header("Location: login.php");
         exit();
     } else {
