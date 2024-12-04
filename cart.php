@@ -195,9 +195,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove'])) {
                         <td>Rp <?= number_format($item['total'], 0, ',', '.'); ?></td>
                         <td>
                          <form method="post">
-                           <input type="hidden" name="item_index" value="<?= $index; ?>"> <!-- Kirimkan indeks item -->
+                           <input type="hidden" name="item_index" value="<?= $index; ?>"> 
                            <button type="submit" name="remove">Hapus</button>
-                <        </form>
+                         </form>
                         </td>
                       </tr>
                      <?php endforeach; ?>
