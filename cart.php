@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove'])) {
             $_SESSION['cart'][$itemIndex]['total'] = $_SESSION['cart'][$itemIndex]['price'] * $_SESSION['cart'][$itemIndex]['quantity'];
         } else {
             unset($_SESSION['cart'][$itemIndex]);
-            $_SESSION['cart'] = array_values($_SESSION['cart']); // Re-index array
+            $_SESSION['cart'] = array_values($_SESSION['cart']); 
         }
     }
     header("Location: cart.php");
