@@ -75,10 +75,22 @@
             color: #555;
         }
     </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css"> <!-- Jika Anda memiliki file CSS -->
 </head>
 <body>
     <div class="container">
         <h2>Register</h2>
+        <?php
+        session_start();
+        if (isset($_SESSION['error'])) {
+            echo '<div style="color: red; font-weight: bold;">' . $_SESSION['error'] . '</div>';
+            unset($_SESSION['error']); 
+        }
+        ?>
         <form method="post" action="process_register.php">
             <input type="text" name="fullname" placeholder="Nama Lengkap" required>
             <input type="email" name="email" placeholder="Email" required>
