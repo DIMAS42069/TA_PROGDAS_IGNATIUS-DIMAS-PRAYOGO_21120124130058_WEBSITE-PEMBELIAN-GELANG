@@ -50,7 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $confirm_password = $_POST['confirm_password'];
 
     if ($password === $confirm_password) {
-        $userManager = new UserManager();
+        $SESSION['error] = "Password dan Konfirmasi Password tidak cocok";
+        header("Location: register.php");
+        exit();
 
         if ($userManager->emailExists($email)) {
             $error = "Email sudah terdaftar!";
