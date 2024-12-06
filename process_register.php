@@ -49,22 +49,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    if ($password === $confirm_password) {
-        $SESSION['error] = "Password dan Konfirmasi Password tidak cocok";
+    $userManager = new UserManager();
+
+    if ($password !== $confirm_password) {
+        $_SESSION['error'] = "Password dan Konfirmasi Password tidak cocok";
         header("Location: register.php");
         exit();
-
-        if ($userManager->emailExists($email)) {
-            $error = "Email sudah terdaftar!";
-            include 'register.php';
-            exit();
-        }
-
-        $userManager->registerUser ($fullname, $email, $password);
-        header("Location: login.php");
-        exit();
-    } else {
-        $error = "Password dan Konfirmasi Password tidak cocok!";
     }
+
+    if ($userManager->emailExists($email)) {
+        $_SESSION['error'] = "Email sudah terdaftar!";
+        header("Location: register.php");
+        exit();
+    }
+
+    $userManager->registerUser ($fullname, $email, $password);
+    header("Location: login.php");
+    exit();
 }
 ?>
